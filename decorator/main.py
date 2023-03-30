@@ -26,16 +26,14 @@ class Cafe(Bebida):
 Definição abstrata de um condimento adicional na bebida (Cafe)
 """
 class Condimento(Bebida):
-    def __init__(self, desc) -> None:
+    def __init__(self, desc, bebida: Bebida) -> None:
         self.descricao = desc
+        self.bebida = bebida
 
 """
 Uma instância concreta de um condimento a ser adicionado
 """
 class Leite(Condimento):
-    def __init__(self, desc, bebida: Bebida) -> None:
-        self.descricao = desc
-        self.bebida = bebida
     def custo(self) -> float:
         return self.bebida.custo() + 3.00
 
