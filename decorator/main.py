@@ -37,10 +37,16 @@ class Leite(Condimento):
     def custo(self) -> float:
         return self.bebida.custo() + 3.00
 
+class Chantilly(Condimento):
+    def custo(self) -> float:
+        return self.bebida.custo() + 1.00
+
 if __name__ == "__main__":
     bebida = Cafe("cafe")
     # Adicionando um condimento (cafe com leite)
     bebida = Leite("cafe com leite", bebida)
+    bebida = Chantilly("cafe personalizado", bebida)
+    bebida = Chantilly("cafe personalizado", bebida)
     # Custo final sempre atualizado
     print("Custo total: ")
     print(bebida.custo())
