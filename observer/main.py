@@ -1,12 +1,10 @@
+from __future__ import annotations
+from abc import ABC, abstractmethod
+
 """
-Verificar sempre a situação da pessoa:
-- peso até 60: abaixo
-- peso entre 60 e 90: normal
-- peso entre 90 e 100: sobrepeso
-- peso acima de 100: obesidade I
-- peso acima de 120: obesidade II
+Verificar sempre a situação da pessoa
 """
-class Dieta:
+class DietaSemObserver:
     def __init__(self, peso):
         self.peso = peso
     
@@ -16,15 +14,98 @@ class Dieta:
     def comerCalorias(self, kcal):
         # Cálculo fictício, não tem nava a ver com a realidade
         self.peso += kcal*0.05
+        if (self.peso<50):
+            print("Vc esta abaixo do peso. Recomendo comer algo.")
+        elif (self.peso<100):
+            print("Vc esta dentro do limite. Continue mantendo assim.")
+        elif (self.peso>=100):
+            print("Vc esta acima do peso. Recomendo dieta e exercicios.")
 
     def exercitar(self, pesoPerdido):
         self.peso -= pesoPerdido
+        if (self.peso<50):
+            print("Vc esta abaixo do peso. Recomendo comer algo.")
+        elif (self.peso<100):
+            print("Vc esta dentro do limite. Continue mantendo assim.")
+        elif (self.peso>=100):
+            print("Vc esta acima do peso. Recomendo dieta e exercicios.")
+
 
     def comerComida(self, kg):
         self.peso += kg
+        if (self.peso<50):
+            print("Vc esta abaixo do peso. Recomendo comer algo.")
+        elif (self.peso<100):
+            print("Vc esta dentro do limite. Continue mantendo assim.")
+        elif (self.peso>=100):
+            print("Vc esta acima do peso. Recomendo dieta e exercicios.")
+
+"""
+Classe com a implementação do Observer.
+"""
+class Dieta:
+    def __init__(self, peso):
+        self.peso = peso
+        # Definindo uma lista de Observers
+        self._observerList = []
+
+    # Adicionar observadores
+    def addObserver(self, obs: Observer):
+        self._observerList.append(obs)
+
+    # Notificador (sempre vai notificar o utilizador do objeto nas atualizações)
+    # Toda vez que alguma mudança for feita, chamar este notificador
+    def notify(self):
+        # Percorrer a lista de observadores
+        for obs in self._observerList:
+            obs.update(self) # Executa a atualização
     
+    def getPeso(self):
+        return self.peso
+    
+    def comerComida(self, kg):
+        self.peso += kg
+        # Chama o notificador
+        self.notify()
+
+"""
+Classe Observer
+"""
+class Observer(ABC):
+    """
+    Método responsável por notificar atualizações.
+    """
+    @abstractmethod
+    def update(self, objeto):
+        pass
+
+"""
+Implementação da versão concreta da classe Observer
+"""
+class DietaObserver(Observer):
+    """
+    objeto: é uma instância da classe Dieta.
+    Este vai ser sempre notificado de atualizações.
+    """
+    def update(self, objeto):
+        if (objeto.getPeso()<50):
+            print("Vc esta abaixo do peso.")
+        elif (objeto.getPeso()<=100):
+            print("Vc esta dentro do limite.")
+        elif (objeto.getPeso()>100):
+            print("Vc esta acima do peso.")
+
 
 if __name__ == "__main__":
+    """
+    pessoa = DietaSemObserver(50)
+    pessoa.comerComida(20)
+    pessoa.comerComida(20)
+    pessoa.comerComida(20)
+    """
     pessoa = Dieta(50)
-    
-    
+    # Adicionando um observador
+    pessoa.addObserver(DietaObserver())
+    pessoa.comerComida(20)
+    pessoa.comerComida(20)
+    pessoa.comerComida(20)
