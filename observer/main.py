@@ -68,6 +68,10 @@ class Dieta:
         # Chama o notificador
         self.notify()
 
+    def queimarCalorias(self, kg):
+        self.peso -= kg
+        self.notify()
+
 """
 Classe Observer
 """
@@ -95,6 +99,20 @@ class DietaObserver(Observer):
         elif (objeto.getPeso()>100):
             print("Vc esta acima do peso.")
 
+"""
+Segundo observador
+"""
+class Recomendador(Observer):
+    def update(self, objeto):
+        if (objeto.getPeso()<30):
+            print("Recomendo procurar um medico, parece doente")
+        elif (objeto.getPeso()<50):
+            print("Recomendo comer um pouco mais")
+        elif (objeto.getPeso()>200):
+            print("Recomendo fazer dieta e procurar um medico")
+        elif (objeto.getPeso()>100):
+            print("Recomendo fazer dieta e exercicios")
+
 
 if __name__ == "__main__":
     """
@@ -106,6 +124,9 @@ if __name__ == "__main__":
     pessoa = Dieta(50)
     # Adicionando um observador
     pessoa.addObserver(DietaObserver())
+    #pessoa.addObserver(Recomendador())
     pessoa.comerComida(20)
     pessoa.comerComida(20)
     pessoa.comerComida(20)
+    pessoa.queimarCalorias(70)
+    pessoa.queimarCalorias(20)
