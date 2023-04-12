@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      height: 100vh;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+
+    .container {
+      background-color: #c3c3c3a8;
+      border-radius: 8px;
+      width: 40%;
+      height: 80%;
+
+      display: flex;
+      /* justify-content: center; */
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .container h1 {
+      margin: 20px 0 20px 0;
+    }
+
+    .content {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    input {
+      height: 30px;
+      width: 70%;
+      border-radius: 8px;
+      margin: 10px 0 30px 0;
+
+      padding: 5px 10px;
+    }
+
+    p {
+      margin: 10px 0 20px 0;
+      font-size: 1.4rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Padrão de Projeto Observer</h1>
+    <div class="content">
+      <input type="text">
+      <p>Paragrafo número 1</p>
+      <p>Paragrafo número 2</p>
+      <p>Paragrafo número 3</p>
+      <p>Paragrafo número 4</p>
+      <p>Paragrafo número 5</p>
+      <p>Paragrafo número 6</p>
+      <p>Paragrafo número 7</p>
+      <p>Paragrafo número 8</p>
+      <p>Paragrafo número 9</p>
+      <p>Paragrafo número 10</p>
+    </div>
+  </div>
+
+  <script>
+    function createSubject() {
+      const state = {
+        observers: [],
+      }
+
+      console.log(state.observers)
+
+      function subscribe(observer) {
+        if (!state.observers.includes(observer)) {
+          state.observers.push(observer);
+
+        }
+      }
+
+      function unsubscribe(observer) {
+        state.observers = state.observers.filter(subscriber => subscriber !== observer)
+      }
+
+      function notifyAll(value) {
+        console.log("Notifying " + state.observers.length + " observers")
+        state.observers.forEach(observer => observer.update(value));
+      }
+
+      document.querySelector('input').addEventListener('keyup', handleKeyDown);
+
+      function handleKeyDown(event) {
+        notifyAll(event.target.value);
+      }
+
+      return {
+        subscribe,
+        unsubscribe
+      }
+    }
+
+    function createObserver(observer) {
+        function update(value) {
+            observer.innerText = value;
+        }
+
+        return {
+            update
+        }
+    }
+
+    const inputSubject = createSubject();
+
+    const paragraphs = document.querySelectorAll('p')
+        
+    paragraphs.forEach((p, i) => {
+        let paragraphObserver = `paragraph${i}`;
+        paragraphObserver = createObserver(p)
+
+        inputSubject.subscribe(paragraphObserver)
+    })
+
+  </script>
+</body>
+
+</html>
